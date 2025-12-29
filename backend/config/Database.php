@@ -1,26 +1,29 @@
 <?php
 class Database
 {
-    /*
-    Constructor Property Promotion
-    starting php 8.0, we no longer need to declare a properties and pass it into the
-    constructor and manually assign it
-    */
-    public function __construct(
-        private $host,
-        private $dbname,
-        private $username,
-        private $password,
-    ) {}
+    #database properties
+    private $host = "localhost";
+    private $dbname = "archive_system";
+    private $username = "root";
+    private $password = "";
+    public $connection;
 
     public function getConnection()
     {
         try {
-            //dsn stands for data source name
-            $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset=utf8";
+            $this->connection = new PDO(
+                "mysql:host={$this->host};dbname={$this->dbname}",
+                $this->username,
+                $this->password
+            );
+            // //print connected successfully
+            // echo json_encode([
+            //     "message:" => "Connected to database successfully"
+            // ]);
 
-            return new PDO($dsn, $this->username, $this->password);
+            return $this->connection;
         } catch (PDOException $e) {
+            http_response_code(500);
             die("Database Error: " . $e->getMessage());
         }
     }
