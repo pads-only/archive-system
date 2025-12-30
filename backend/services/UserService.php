@@ -55,14 +55,11 @@ class UserService
     //add user
     public function create(UserModel $user)
     {
-        // //validation
-        // if (empty($user->name) || empty($this->email) || empty($this->password)) {
-        //     http_response_code(422);
-        //     echo json_encode([
-        //         "message: " => "All fields are required"
-        //     ]);
-        //     return;
-        // }
+        /**
+         * used transaction to ensure when a new user is created
+         * a role will be assign to that user
+         */
+        $this->conn->beginTransaction();
         //query
         $sql = "INSERT INTO users (name, email, password)
                 VALUES (:name, :email, :password)";
@@ -76,6 +73,22 @@ class UserService
 
         //execute
         $stmt->execute();
+
+        /**
+         * this will add role to user
+         */
+        $sql_user_role = "INSERT INTO user_roles (user_id, role_id)
+                          VALUES (:user_id, :role_id)";
+
+        $stmt_user_role = $this->conn->prepare($sql_user_role);
+
+        $stmt_user_role->bindValue(":user_id", $this->conn->lastInsertId());
+        $stmt_user_role->bindValue(":role_id", 1);
+
+        $stmt_user_role->execute();
+
+        //commit the sql queries
+        $this->conn->commit();
 
         return $this->conn->lastInsertId();
     }
