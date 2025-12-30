@@ -20,4 +20,5 @@ if ($uri[3] != "users") {
 //check if the 4th index is an id
 $id = $uri[4] ?? null;
 
+//pass the $method and $id as paramater to processrequest method
 $controller->processRequest($method, $id);

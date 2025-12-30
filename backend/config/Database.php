@@ -16,10 +16,6 @@ class Database
                 $this->username,
                 $this->password
             );
-            // //print connected successfully
-            // echo json_encode([
-            //     "message:" => "Connected to database successfully"
-            // ]);
 
             return $this->connection;
         } catch (PDOException $e) {

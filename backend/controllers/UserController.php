@@ -35,6 +35,25 @@ class UserController
         switch ($method) {
             case "GET":
                 echo json_encode([$user]);
+            case "PATCH":
+                $data = json_decode(file_get_contents("php://input"), true);
+
+                $current_user_id = $user['user_id'];
+
+                $id = $this->gateway->update($current_user_id, $data);
+
+                //set http response code to 402 which is created
+                http_response_code(201);
+                echo json_encode([
+                    "message: " => "User has been updated!",
+                    "row: " => $id
+                ]);
+
+                break;
+
+            default;
+                http_response_code(405);
+                header("Allow: GET, PATCH, DELETE");
         }
     }
 
@@ -54,20 +73,11 @@ class UserController
                     break;
                 }
 
-                /* 
-                create user object and fills it with data 
-                from the request and pass it to create() in the userserive
-                */
-                $user = new UserModel();
-                $user->name = $data['name'];
-                $user->email = $data['email'];
-                $user->password = $data['password'];
-
-                /*
-                get the id from the newly created user 
-                this happens because create method returns lastInsertId();
-                */
-                $id = $this->gateway->create($user);
+                /**
+                 * get the id from the newly created user
+                 * this happens because create method returns lastInsertId();
+                 */
+                $id = $this->gateway->create($data);
 
                 //set http response code to 402 which is created
                 http_response_code(201);
@@ -76,6 +86,9 @@ class UserController
                     "id: " => $id
                 ]);
                 break;
+            default:
+                http_response_code(405);
+                header("Allow: GET, POST");
         }
     }
 }
