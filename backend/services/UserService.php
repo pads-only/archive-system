@@ -62,13 +62,16 @@ class UserService
     //add user
     public function create($data)
     {
+        // hashed the password before assigning to Usermodel object
+        $password = $data['password'];
+        $hash_pwd = password_hash($password, PASSWORD_DEFAULT);
         /**
          * get the data and ccreate instance of user model
          */
         $user = new UserModel();
         $user->name = $data['name'];
         $user->email = $data['email'];
-        $user->password = $data['password'];
+        $user->password = $hash_pwd;
         /**
          * used transaction to ensure when a new user is created
          * a role will be assign to that user
@@ -106,9 +109,9 @@ class UserService
         $stmt_user_role->execute();
 
         //commit the sql queries
-        $this->conn->commit();
-
         return $this->conn->lastInsertId();
+
+        $this->conn->commit();
     }
     //update user info
     public function update($current_user_id, $new)
@@ -128,6 +131,13 @@ class UserService
         }
 
         /**
+         * if new value is provided for password hash it
+         */
+        if (isset($new["password"])) {
+            $hash_pwd = password_hash($new["password"], PASSWORD_DEFAULT);
+        }
+
+        /**
          * assign to new instance of usermodel if new data is set
          * if user set value for name, email or password then
          */
@@ -135,7 +145,7 @@ class UserService
         $user = new UserModel();
         $user->name = isset($new["name"]) ? $new["name"] : $current_user["name"];
         $user->email = isset($new["email"]) ? $new["email"] : $current_user["email"];
-        $user->password = isset($new["password"]) ? $new["password"] : $current_user["password"];
+        $user->password = isset($new["password"]) ? $hash_pwd : $current_user["password"];
 
 
         $sql = "UPDATE users
