@@ -27,19 +27,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
-export default function CustomizedTables() {
+export default function CustomizedTables({ data }) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -47,19 +35,19 @@ export default function CustomizedTables() {
           <TableRow>
             <StyledTableCell>Name</StyledTableCell>
             <StyledTableCell align="right">ID</StyledTableCell>
-            <StyledTableCell align="right">Enail</StyledTableCell>
-            <StyledTableCell align="right">Role</StyledTableCell>
+            <StyledTableCell align="right">Email</StyledTableCell>
+            <StyledTableCell align="right">Password</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
+          {data.map((dt) => (
+            <StyledTableRow key={dt.user_id}>
               <StyledTableCell component="th" scope="row">
-                {row.name}
+                {dt.name}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+              <StyledTableCell align="right">{dt.user_id}</StyledTableCell>
+              <StyledTableCell align="right">{dt.email}</StyledTableCell>
+              <StyledTableCell align="right">{dt.password}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

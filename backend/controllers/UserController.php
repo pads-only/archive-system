@@ -34,7 +34,7 @@ class UserController
 
         switch ($method) {
             case "GET":
-                echo json_encode([$user]);
+                echo json_encode($user);
                 break;
             case "PATCH":
                 $data = json_decode(file_get_contents("php://input"), true);
@@ -71,7 +71,7 @@ class UserController
     {
         switch ($method) {
             case "GET":
-                echo json_encode([$this->gateway->getAllUser()]);
+                echo json_encode($this->gateway->getAllUser());
                 break;
             case "POST":
                 $data = json_decode(file_get_contents("php://input"), true);

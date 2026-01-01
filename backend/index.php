@@ -1,21 +1,10 @@
 <?php
-// require_once __DIR__ . '/config/Database.php';
+
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Credentials: true");
+
 require_once __DIR__ . '/routes/api.php';
 
-
 header("Content-type: application/json; charsetUTF-8");
-
-// $path = explode("/", $_SERVER["REQUEST_URI"]);
-// $method = $_SERVER["REQUEST_METHOD"];
-
-// var_dump($path);
-// var_dump($method);
-
-// print_r($path);
-// if ($path[3] != "user") {
-//     http_response_code(404);
-//     exit;
-// }
-
-// $database = new Database('localhost', 'archive_system', 'root', '');
-// $conn = $database->getConnection();

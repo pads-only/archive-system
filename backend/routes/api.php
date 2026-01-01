@@ -14,6 +14,9 @@ $controller = new UserController();
 
 if ($uri[3] != "users") {
     http_response_code(404);
+    echo json_encode([
+        "message:" => "invalid url"
+    ]);
     exit;
 }
 
