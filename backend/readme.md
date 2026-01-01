@@ -21,3 +21,6 @@ Database (PDO)
 User Model
   ↓
 JSON Response
+
+
+fix the id when newly created it is returning 0 instead of the id of new user

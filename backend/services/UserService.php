@@ -94,6 +94,9 @@ class UserService
         //execute
         $stmt->execute();
 
+        //get the id of the newly created user
+        $new_user_id = $this->conn->lastInsertId();
+
         /**
          * this will add role to user
          */
@@ -109,9 +112,10 @@ class UserService
         $stmt_user_role->execute();
 
         //commit the sql queries
-        return $this->conn->lastInsertId();
 
         $this->conn->commit();
+
+        return $new_user_id;
     }
     //update user info
     public function update($current_user_id, $new)
