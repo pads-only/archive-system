@@ -58,11 +58,6 @@ class UserService
      * create user object and fills it with data 
      * from the request and pass it to create() in the userserive
      */
-    // $user = new UserModel();
-    // $user->name = $data['name'];
-    // $user->email = $data['email'];
-    // $user->password = $data['password'];
-
 
     //add user
     public function create($data)
@@ -166,5 +161,44 @@ class UserService
         return $stmt->rowCount();
     }
     //delete user
+    /**
+     * 
+     * used transaction to delete user since 
+     * user_id is foreign key to user_roles
+     * used rollback() in case of error in deleting user
+     * rollback will reverse the changes
+     */
+    public function delete($id)
+    {
+        try {
+            $this->conn->beginTransaction();
 
+            $sql_role = "DELETE
+                        FROM user_roles
+                        WHERE user_id = :id
+                        ";
+            $role_stmt = $this->conn->prepare($sql_role);
+            $role_stmt->bindValue(":id", $id);
+            $role_stmt->execute();
+
+            $sql = "DELETE 
+                    FROM users 
+                    WHERE user_id = :id
+                    ";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindValue(":id", $id);
+            $stmt->execute();
+
+            $this->conn->commit();
+        } catch (\Throwable $th) {
+            echo json_encode([
+                "message: " => "There's an error deleting the user $id! Rollback executed!"
+            ]);
+            $this->conn->rollBack();
+        }
+
+        return $stmt->rowCount();
+    }
 }

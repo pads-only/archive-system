@@ -35,6 +35,7 @@ class UserController
         switch ($method) {
             case "GET":
                 echo json_encode([$user]);
+                break;
             case "PATCH":
                 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -50,7 +51,16 @@ class UserController
                 ]);
 
                 break;
+            case "DELETE":
+                $row = $this->gateway->delete($id);
+                if ($row) {
+                    echo json_encode([
+                        "message: " => "The user $id has been deleted",
+                        "row: " => $row,
+                    ]);
+                }
 
+                break;
             default;
                 http_response_code(405);
                 header("Allow: GET, PATCH, DELETE");
